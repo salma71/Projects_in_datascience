@@ -7,6 +7,7 @@ This is a collection of data science short projects aimed to learn machine learn
 1. Draw Flowers Using Mathematics - Python
 2. Naïve Bees/ Image Loading and Processing - Python
 3. Which Debts Are Worth the Bank's Effort? - Python
+4. GIVE LIFE: PREDICT BLOOD DONATIONS - Apply [tpot library](https://github.com/EpistasisLab/tpot) to get the best fitting model - python
 
 ## Installation
 
