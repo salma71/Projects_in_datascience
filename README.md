@@ -9,6 +9,7 @@ This is a collection of data science short projects aimed to learn machine learn
 3. Which Debts Are Worth the Bank's Effort? - Python
 4. GIVE LIFE: PREDICT BLOOD DONATIONS - Apply [tpot library](https://github.com/EpistasisLab/tpot) to get the best fitting model - python
 5. The Hottest Topics in Machine Learning - python 
+6. Extract Stock Sentiment from News Headlines - python 
 
 ## Installation
 
