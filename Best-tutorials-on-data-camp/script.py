@@ -8,6 +8,7 @@ from urllib.request import urlopen
 import matplotlib.ticker as ticker
 import matplotlib.dates as mdates
 from datetime import datetime
+from dateutil.parser import parse
 import time
 import re
 import pandas as pd
@@ -56,6 +57,25 @@ for page in np.arange(1, int(last_page)+1):
     date.append([i.text for i in soup.find_all(class_='jsx-566588255 date')])
     upvotes.append([i.text for i in soup.find_all(class_='jsx-1972554161 count')])
 
-chain_object = itertools.chain.from_iterable(description)
-desc_flatted = list(chain_object)
-print(desc_flatted)
+# unpack the list of lists using itertools pakage
+chain_link = itertools.chain.from_iterable(link)
+link_flatted = list(chain_link)
+
+chain_title = itertools.chain.from_iterable(title)
+title_flatted = list(chain_title)
+
+chain_tag = itertools.chain.from_iterable(tag)
+tag_flatted = list(chain_tag)
+
+chain_author = itertools.chain.from_iterable(author)
+author_flatted = list(chain_author)
+
+chain_desc = itertools.chain.from_iterable(description)
+desc_flatted = list(chain_desc)
+
+chain_upvote = itertools.chain.from_iterable(upvotes)
+link_flatted = list(chain_upvote)
+
+chain_date = itertools.chain.from_iterable(date)
+link_flatted = list(chain_date)
+
