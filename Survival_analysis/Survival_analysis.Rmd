@@ -19,39 +19,13 @@ library(plyr)
 ```
 
 ```{r}
+data("veteran")
 str(veteran)
 ```
 
-```{r}
-# Dichotomize age and change data labels
-veteran$prior <- factor(veteran$prior) %>%
-  revalue(c("0"= "No", "10"="Yes"))
-```
-
-```{r}
-hist(veteran$karno)
-veteran$karno <- factor(veteran$karno)
-levels(veteran$karno)
-```
-
-```{r}
-veteran$karno <- factor(veteran$karno) %>%
-  revalue(c("0"= "No", "10"="Yes"))
-```
-
-```{r}
-veteran <- veteran %>% 
-  mutate(age_gp = ifelse(age >= 50, "old", "young"))
-veteran$age_gp <- factor(veteran$age_gp)
-
-levels(veteran$age_gp)
-```
 
 We need to compare `celltype` change during time
-```{r}
-hist(veteran$age) # bimodal
 
-```
 ```{r}
 surv_object <- Surv(time = veteran$time, event = veteran$status)
 surv_object 
@@ -67,25 +41,76 @@ summary(fit1)
 
 You can examine the corresponding survival curve by passing the survival object to the ggsurvplot function. The pval = TRUE argument is very useful, because it plots the p-value of a log rank test as well!
 
-```{r}
-ggsurvplot(fit1, pval = TRUE, data = veteran)
+```{r, fig.height = 4, fig.width = 5, fig.align = "center"}
+ggsurvplot(fit1, pval = TRUE,
+           fun = 'pct', 
+           conf.int = TRUE, 
+           surv.median.line = "hv", # Specify median survival
+           risk.table = TRUE, # Add risk table
+           ggtheme = theme_bw(), # Change ggplot2 theme
+           data = veteran)
+```
 
+```{r}
+summary(fit1)$table
+```
+```{r, fig.height = 4, fig.width = 5, fig.align = "center"}
+ggsurvplot(fit1,
+          risk.table.col = "strata", # Change risk table color by groups
+          ggtheme = theme_bw(), # Change ggplot2 theme
+          xlim = c(0, 250))
+```
+
+```{r}
+ggsurvplot(fit1,
+          conf.int = TRUE,
+          risk.table.col = "strata", # Change risk table color by groups
+          ggtheme = theme_bw(), # Change ggplot2 theme
+          fun = "cumhaz")
+```
+```{r}
+summary(fit1)
 ```
 
 
 
 ```{r}
-fit2 <- survfit(surv_object ~ karno, data = veteran)
-ggsurvplot(fit2, data = veteran, pval = TRUE)
+res.sum <- surv_summary(fit1)
+head(res.sum)
+```
+
+```{r}
+attr(res.sum, "table")
+surv_diff <- survdiff(Surv(time, status) ~ celltype, data = veteran)
+surv_diff
 ```
 
 ```{r}
 # Fit a Cox proportional hazards model
-fit.coxph <- coxph(surv_object ~ celltype + karno + age, 
-                   data = veteran)
-ggforest(fit.coxph, data = veteran)
+model <- coxph( Surv(time, status) ~ celltype + prior + karno + age,
+                data = veteran )
+summary(model)
+ftest <- cox.zph(model)
+ftest
+ggcoxzph(ftest)
 ```
 
+
+```{r}
+ggsurvplot(survfit(model, data=vet), color = "#2E9FDF",
+           ggtheme = theme_minimal())
+```
+
+```{r}
+# veteran$age_gp <- ifelse(veteran$age > 60, ">60", "<=60")
+fit <- coxph( Surv(time, status) ~ celltype+karno ,
+                data = veteran )
+fit
+```
+
+```{r}
+ggforest(model)
+```
 
 
 
