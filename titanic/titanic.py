@@ -7,6 +7,7 @@ Created on Thu Apr 16 10:59:25 2020
 """
 
 
+
 # Importing the libraries
 import numpy as np
 import matplotlib.pyplot as plt
@@ -124,10 +125,20 @@ dataset['Age'] = imputer.fit_transform(dataset[['Age']]).ravel()
 
 dataset['Fare'] = imputer.fit_transform(dataset[['Fare']]).ravel()
 
+dataset['Embarked'] = dataset['Embarked'].fillna(dataset['Embarked'].mode().iloc[0])
 
 
+## split the dataset into inputs and putputs
+X = dataset.iloc[:, 2:].values
+y = dataset.iloc[:, 1].values
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.319, random_state = 0)
 
-
+# Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
 
 
 
