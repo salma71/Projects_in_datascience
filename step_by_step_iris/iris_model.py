@@ -95,11 +95,50 @@ y = dataset.iloc[:, 5].values
     # c) Data Transforms
 # 4. Evaluate Algorithms
     # a) Split-out validation dataset
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
 
     # b) Test options and evaluation metric 
     # c) Spot Check Algorithms
+# now it is time to evaluate some  of the appropriate algorithms that can fit our  problem.
+models = []
+models.append(('Log-Reg', LogisticRegression()))
+models.append(('LDA', lda())) 
+models.append(('KNN', KNeighborsClassifier())) 
+models.append(('CART', DecisionTreeClassifier())) 
+models.append(('NB', GaussianNB())) 
+models.append(('SVM', SVC()))
+
+# evaluate each model in turns
+
     # d) Compare Algorithms
+results = []
+
+names  = []
+
+for name, model in models:
+    kfold = KFold(n_splits = 10, random_state = 42)
+    cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring='accuracy')
+    results.append(cv_results)
+    names.append(name)
+    msg = "%s: %f (%f)" % ( name, cv_results.mean(), cv_results.std())
+    print(msg)
+
+# Compare Algorithms
+fig = plt.figure() 
+fig.suptitle('Algorithm Comparison') 
+ax = fig.add_subplot(111) 
+plt.boxplot(results) 
+ax.set_xticklabels(names) 
+plt.show()
+
+
+# make the prediction 
+knn = KNeighborsClassifier()
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+print(accuracy_score(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
 # 5. Improve Accuracy 
     # a) Algorithm Tuning 
     # b) Ensembles
