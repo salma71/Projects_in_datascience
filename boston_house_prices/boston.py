@@ -9,10 +9,9 @@ Created on Tue Apr 21 16:03:09 2020
 
 # Load libraries
 import numpy as np
-from matplotlib.pyplot import plt
+import matplotlib.pyplot as plt
 import pandas as pd
 from pandas import set_option
-from pandas.tools.plotting import scatter_matrix
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split 
 from sklearn.model_selection import KFold
@@ -30,5 +29,77 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import AdaBoostRegressor
 from sklearn.metrics import mean_squared_error
+
+url = 'https://raw.githubusercontent.com/salma71/Projects_in_datascience/master/boston_house_prices/Boston.csv'
+
+dataset = pd.read_csv(url)
+
+print(dataset.shape)
+
+print(dataset.dtypes)
+
+set_option('precision', 1)
+print(dataset.describe)
+
+print(dataset.head(10))
+
+
+set_option('precision', 2)
+print(dataset.corr(method='pearson'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
