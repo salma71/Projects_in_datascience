@@ -110,12 +110,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, rando
 ## we need to do feature scaling first before picking an algorithm
 sc_X = StandardScaler()
 X_train = sc_X.fit_transform(X_train)
+
 ## Let's compare algorithms each one in turn 
 
 ## Create the List of Algorithms to Evaluate.models 
 models = []
 
-models.append(('LR'), LinearRegression())
+models.append(('LR', LinearRegression()))
 models.append(('LASSO', Lasso())) 
 models.append(('EN', ElasticNet())) 
 models.append(('KNN', KNeighborsRegressor())) 
@@ -125,10 +126,33 @@ models.append(('SVR', SVR()))
 results = []
 names = []
 
-for name, model
+for name, model in models:
+    kfold = KFold(n_splits=7, random_state=seed)
+    cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring = 'neg_mean_squared_error')
+    results.append(cv_results)
+    names.append(name)
+    msg = '%s: %f (%f)' % (name, cv_results.mean(), cv_results.std())
+    print(msg)
 
+"""
+LR: -21.396935 (9.579436)
+LASSO: -26.595761 (8.525059)
+EN: -27.936655 (8.963998)
+KNN: -19.513609 (9.135670)
+CART: -24.932037 (10.215727)
+SVR: -30.018945 (13.935143)
 
+"""  
+    
+# KNN has both a tight distribution of error and has the lowest score.
 
+# Compare Algorithms
+fig = plt.figure()
+fig.suptitle('Scaled Algorithm Comparison') 
+ax = fig.add_subplot(111) 
+plt.boxplot(results) 
+ax.set_xticklabels(names)
+plt.show()
 
 
 
