@@ -224,7 +224,11 @@ curve.plot()
 regressor = KNeighborsRegressor(n_neighbors = 3)
 regressor.fit(X_train, y_train)
 
+X_test = sc_X.fit_transform(X_test)
 y_pred = regressor.predict(X_test)
+
+print(mean_squared_error(y_test, y_pred))
+# 33.755675381263615
 
 ## ensamble methods 
 
@@ -303,8 +307,18 @@ Best params: 0.894097 using {'n_estimators': 100}
 '''
 ## Finalize the model
 
+regressor_et = ExtraTreesRegressor(n_estimators=100, random_state=seed)
+regressor_et.fit(X_train, y_train)
 
+X_test = sc_X.fit_transform(X_test)
 
+predection = regressor_et.predict(X_test)
+print(mean_squared_error(y_test, predection)) 
+
+#14.77384742156861
+
+# as we can see the MSE is down by 50% ( from 33 to 14.7) when using the ensamble learning.
+ 
 
 
 
