@@ -154,8 +154,47 @@ plt.boxplot(results)
 ax.set_xticklabels(names)
 plt.show()
 
+## Tunning the algorithm 
 
+"""
+I used a grid search to try a set of different numbers of neighbors 
+and see if I can improve the score. 
+I tried odd k values from 1 to 21, an arbitrary range covering a known good value of 7. 
+Each k value (n neighbors) is evaluated using 10-fold cross validation on 
+the standardized copy of the training dataset.
+"""
 
+k_values = np.array([1, 3, 5,7,9,11,13,15,17,19,21])
+param_grid = dict(n_neighbors=k_values)
+model = KNeighborsRegressor()
+kfold = KFold(n_splits = 10, random_state=seed)
+grid = GridSearchCV(estimator = model, param_grid=param_grid, scoring = 'neg_mean_squared_error', cv=kfold)
+grid_result = grid.fit(X_train, y_train)
+
+print('Best score: %f using %s' % (grid_result.best_score_, grid_result.best_params_))
+means = grid_result.cv_results_['mean_test_score']
+stds = grid_result.cv_results_['std_test_score']
+params = grid_result.cv_results_['params']
+
+# print Output From Tuning the KNN Algorithm
+for mean, stdev, param in zip(means, stds, params):
+    print("%f (%f) with: %r" % (mean, stdev, param))
+    
+"""
+Best score: -18.109304 using {'n_neighbors': 3}
+-20.169640 (14.986904) with: {'n_neighbors': 1}
+-18.109304 (12.880861) with: {'n_neighbors': 3}
+-20.063115 (12.138331) with: {'n_neighbors': 5}
+-20.514297 (12.278136) with: {'n_neighbors': 7}
+-20.319536 (11.554509) with: {'n_neighbors': 9}
+-20.963145 (11.540907) with: {'n_neighbors': 11}
+-21.099040 (11.870962) with: {'n_neighbors': 13}
+-21.506843 (11.468311) with: {'n_neighbors': 15}
+-22.739137 (11.499596) with: {'n_neighbors': 17}
+-23.829011 (11.277558) with: {'n_neighbors': 19}
+-24.320892 (11.849667) with: {'n_neighbors': 21}
+"""
+# best for k (n neighbors) is 3 providing a mean squared error of -18.109304 , the best so far
 
 
 
