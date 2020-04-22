@@ -226,10 +226,82 @@ regressor.fit(X_train, y_train)
 
 y_pred = regressor.predict(X_test)
 
+## ensamble methods 
 
+'''
+Another way that we can improve the performance of algorithms 
+on this problem is by using ensemble methods. 
+In this section we will evaluate four different ensemble machine 
+learning algorithms, two boosting and two bagging methods.
 
+* Boosting Methods: 
+    - AdaBoost (AB) and 
+    - Gradient Boosting (GBM). 􏰀 
+* Bagging Methods: 
+    - Random Forests (RF) and 
+    - Extra Trees (ET).
+'''
 
+# I will use same comparing method as last time
 
+ensambles = []
+ensambles.append(('AB', AdaBoostRegressor()))
+ensambles.append(('GBM', GradientBoostingRegressor()))
+ensambles.append(('RF', RandomForestRegressor()))
+ensambles.append(('ET', ExtraTreesRegressor()))
+
+results_ens = []
+names_ens = []
+
+for name, model in ensambles:
+    kfold = KFold(n_splits = 7)
+    cv_results = cross_val_score(model, X_train, y_train, cv=kfold,scoring='neg_mean_squared_error')
+    results_ens.append(cv_results)
+    names_ens.append(name)
+    msg = '%s: %f (%f)' % (name, cv_results.mean(), cv_results.std())
+    print(msg)
+
+'''
+AB: -14.075652 (5.874932)
+GBM: -9.492096 (3.455731)
+RF: -11.494699 (4.426762)
+ET: -9.147649 (4.421966)
+'''
+'''
+# We can see that we’re generally getting better scores than the linear and nonlinear algorithms 
+# in previous results
+
+ET seems to perform bettwe than GBM where it has the min MES. 
+However, we can use the tuning to see if we can perform make the model perform better
+'''
+
+# Compare Algorithms
+fig = plt.figure()
+fig.suptitle('Scaled Ensemble Algorithm Comparison') 
+ax = fig.add_subplot(111)
+plt.boxplot(results_ens)
+ax.set_xticklabels(names_ens)
+plt.show()
+
+## Parameter tuning 
+param_et = dict(n_estimators= np.array([50,100,150,200,250,300,350,400]))
+model_ET = ExtraTreesRegressor(random_state=seed)
+kfold_ET = KFold(n_splits=10)
+grid_et = GridSearchCV(estimator=model, param_grid=param_et)
+grid_res_et = grid_et.fit(X_train, y_train)
+
+print('Best params: %f using %s' % (grid_res_et.best_score_, grid_res_et.best_params_))
+means_et = grid_res_et.cv_results_['mean_test_score']
+stds_et = grid_res_et.cv_results_['std_test_score']
+params_et = grid_res_et.cv_results_['params']
+
+for mean, std, param in zip(means_et, stds_et, params_et):
+    print('%f (%f) with: %r' % (mean, std, params))
+    
+'''
+Best params: 0.894097 using {'n_estimators': 100}
+'''
+## Finalize the model
 
 
 
