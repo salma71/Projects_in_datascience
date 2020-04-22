@@ -12,7 +12,13 @@ This is a collection of data science short projects aimed to learn machine learn
 6. Extract Stock Sentiment from News Headlines - python 
 7. Titanic
 8. Step by step iris -  evaluating ML algorithms to use the best one
-
+9. Step by step Boston 
+    - Evaluating regression algorithms (Linear Regression looked good but KNN performs better).
+    - Algorithm tuning
+    - Applying ensamble methods(Bagging and Boosting, ExtraTreesRegressoe looked good)
+    - Tuning Ensemble Methods
+    - Finalize the model.
+    
 ## Installation
 
 Just clone or download the repo into your local machine.
