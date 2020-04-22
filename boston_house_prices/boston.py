@@ -100,6 +100,33 @@ cmap = sns.diverging_palette(220, 10, as_cmap=True)
 sns.heatmap(corrd, mask=maskd, cmap=cmap, vmax=.3, center=0,
             square=True, linewidths=.5, cbar_kws={"shrink": .5})
 
+## Split the dataset into train and test set
+seed = 7
+X = dataset.iloc[:, 1:14].values
+y = dataset.iloc[:, 14].values
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=seed)
+
+## we need to do feature scaling first before picking an algorithm
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+## Let's compare algorithms each one in turn 
+
+## Create the List of Algorithms to Evaluate.models 
+models = []
+
+models.append(('LR'), LinearRegression())
+models.append(('LASSO', Lasso())) 
+models.append(('EN', ElasticNet())) 
+models.append(('KNN', KNeighborsRegressor())) 
+models.append(('CART', DecisionTreeRegressor())) 
+models.append(('SVR', SVR()))
+
+results = []
+names = []
+
+for name, model
+
 
 
 
