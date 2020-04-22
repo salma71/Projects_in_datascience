@@ -29,6 +29,8 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import AdaBoostRegressor
 from sklearn.metrics import mean_squared_error
+import seaborn as sns
+
 
 url = 'https://raw.githubusercontent.com/salma71/Projects_in_datascience/master/boston_house_prices/Boston.csv'
 
@@ -47,22 +49,56 @@ print(dataset.head(10))
 set_option('precision', 2)
 print(dataset.corr(method='pearson'))
 
+# Unimodal visualization
+
+# histograms
+dataset.hist(sharex=False, sharey=False, xlabelsize=1, ylabelsize=1) 
+plt.show()
+
+# density
+dataset.plot(kind='density', subplots=True, layout=(4,4), sharex=False, legend=False, fontsize=1)
+plt.show()
+
+# box and whisker plots
+dataset.plot(kind='box', subplots=True, layout=(4,4), sharex=False, sharey=False, fontsize=8)
+plt.show()
 
 
+# Multimodal visualization
 
+sns.pairplot(dataset)
 
+# correlation matrix
+names = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO',
+'B', 'LSTAT', 'MEDV']
 
+"""
+fig = plt.figure()
+ax = fig.add_subplot(111)
+cax = ax.matshow(dataset.corr(), vmin=-1, vmax=1, interpolation='none') 
+fig.colorbar(cax)
+ticks = np.arange(0,14,1)
+ax.set_xticks(ticks)
+ax.set_yticks(ticks)
+ax.set_xticklabels(names)
+ax.set_yticklabels(names)
+plt.show()
+"""
+sns.set(style = 'white')
+corrd = dataset.corr()
 
+# Generate a mask for the upper triangle
+maskd = np.triu(np.ones_like(corrd, dtype=np.bool))
 
+# Set up the matplotlib figure
+f, ax = plt.subplots(figsize=(11, 9))
 
+# Generate a custom diverging colormap
+cmap = sns.diverging_palette(220, 10, as_cmap=True)
 
-
-
-
-
-
-
-
+# Draw the heatmap with the mask and correct aspect ratio
+sns.heatmap(corrd, mask=maskd, cmap=cmap, vmax=.3, center=0,
+            square=True, linewidths=.5, cbar_kws={"shrink": .5})
 
 
 
