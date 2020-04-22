@@ -177,8 +177,10 @@ stds = grid_result.cv_results_['std_test_score']
 params = grid_result.cv_results_['params']
 
 # print Output From Tuning the KNN Algorithm
+
 for mean, stdev, param in zip(means, stds, params):
     print("%f (%f) with: %r" % (mean, stdev, param))
+    mean_errors.append(mean)
     
 """
 Best score: -18.109304 using {'n_neighbors': 3}
@@ -196,8 +198,33 @@ Best score: -18.109304 using {'n_neighbors': 3}
 """
 # best for k (n neighbors) is 3 providing a mean squared error of -18.109304 , the best so far
 
+'''
+## another method to choose the best k using elbow curve
+from sklearn import neighbors
+from math import sqrt
+rmse_val = [] #to store rmse values for different k
 
+for K in range(20):
+    K = K+1
+    model = neighbors.KNeighborsRegressor(n_neighbors = K)
 
+    model.fit(X_train, y_train)  #fit the model
+    pred=model.predict(X_test) #make prediction on test set
+    error = sqrt(mean_squared_error(y_test,pred)) #calculate rmse
+    rmse_val.append(error) #store rmse values
+    print('RMSE value for k= ' , K , 'is:', error)
+    
+#plotting the rmse values against k values
+curve = pd.DataFrame(rmse_val) #elbow curve 
+curve.plot()
+ '''
+   
+## Build the model using those results 
+
+regressor = KNeighborsRegressor(n_neighbors = 3)
+regressor.fit(X_train, y_train)
+
+y_pred = regressor.predict(X_test)
 
 
 
